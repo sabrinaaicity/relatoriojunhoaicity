@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório mês de junho AICITY</title>
+<style>
+  :root {
+    color-scheme: light;
+    --blue-deep: #1222BE;
+    --blue-mid:  #2D6FD9;
+    --blue-light:#4A90E2;
+    --blue-pale: #E8F0FE;
+    --black:     #0a0a0f;
+    --white:     #ffffff;
+    --gray-bg:   #F4F6FB;
+    --gray-card: #ffffff;
+    --gray-text: #3d3d4a;
+    --gray-muted:#7a7a8c;
+    --border:    #DDE3F0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif; background: var(--gray-bg); color: var(--black); min-height: 100vh; }
+  .dashboard { max-width: 1200px; margin: 0 auto; padding: 28px 24px; }
+
+  .header {
+    background: var(--blue-deep); border-radius: 20px; padding: 36px 40px;
+    margin-bottom: 24px; overflow: hidden; position: relative;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+  .header-deco  { position:absolute; right:-40px; top:-40px; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); pointer-events:none; }
+  .header-deco2 { position:absolute; left:-30px; bottom:-40px; width:160px; height:160px; border-radius:50%; background:rgba(74,144,226,0.07); border:1px solid rgba(74,144,226,0.10); pointer-events:none; }
+  .brand-name { font-size:52px; font-weight:900; color:var(--white); letter-spacing:10px; line-height:1; text-transform:uppercase; }
+  .brand-tag  { font-size:11px; color:var(--blue-light); letter-spacing:3px; text-transform:uppercase; font-style:italic; margin-top:6px; }
+  .header-divider { width:60px; height:2px; background:rgba(74,144,226,0.5); border-radius:2px; margin:14px auto; }
+  .header-info-row { display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap; margin-bottom:20px; }
+  .header-info-item { display:flex; align-items:center; gap:6px; font-size:12px; color:rgba(255,255,255,0.55); letter-spacing:0.5px; }
+  .header-info-item .dot { width:4px; height:4px; border-radius:50%; background:rgba(255,255,255,0.25); }
+  .header-report { font-size:22px; font-weight:800; color:white; letter-spacing:1px; margin-bottom:20px; }
+  .header-badges { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .hbadge { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:12px 22px; text-align:center; }
+  .hbadge .n { font-size:24px; font-weight:800; color:var(--white); display:block; line-height:1; }
+  .hbadge .l { font-size:10px; color:rgba(255,255,255,0.5); letter-spacing:0.5px; margin-top:3px; display:block; }
+
+  .kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+  .kpi-card { background:var(--gray-card); border-radius:16px; padding:22px 20px; box-shadow:0 1px 4px rgba(18,34,190,.06),0 4px 16px rgba(18,34,190,.04); border:1px solid var(--border); position:relative; overflow:hidden; }
+  .kpi-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--blue-deep); border-radius:16px 16px 0 0; }
+  .kpi-icon  { font-size:22px; margin-bottom:10px; }
+  .kpi-value { font-size:26px; font-weight:800; color:var(--black); letter-spacing:-1px; line-height:1; }
+  .kpi-label { font-size:12px; color:var(--gray-muted); margin-top:4px; }
+  .kpi-delta { font-size:11px; font-weight:700; margin-top:10px; padding:3px 9px; border-radius:20px; display:inline-block; }
+  .delta-up { background:#DBEAFE; color:var(--blue-deep); }
+  .delta-n  { background:#F3F4F6; color:#6B7280; }
+
+  .section { background:var(--gray-card); border-radius:20px; padding:26px; margin-bottom:24px; box-shadow:0 1px 4px rgba(18,34,190,.06),0 4px 16px rgba(18,34,190,.04); border:1px solid var(--border); }
+  .section-title { font-size:16px; font-weight:800; color:var(--black); margin-bottom:20px; display:flex; align-items:center; gap:10px; letter-spacing:-.2px; }
+  .section-title .pill { font-size:10px; font-weight:700; background:var(--blue-deep); color:white; padding:3px 10px; border-radius:20px; letter-spacing:.5px; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px; }
+  .panel { background:var(--gray-card); border-radius:20px; padding:26px; box-shadow:0 1px 4px rgba(18,34,190,.06),0 4px 16px rgba(18,34,190,.04); border:1px solid var(--border); }
+
+  .chart-wrap { position:relative; height:260px; }
+  .chart-wrap canvas { display:block; width:100% !important; height:260px !important; }
+
+  .demo-grid { display:grid; grid-template-columns:1fr 2fr; gap:24px; }
+  .gender-wrap { display:flex; flex-direction:column; gap:12px; justify-content:center; }
+  .gender-bar-row { display:flex; align-items:center; gap:10px; }
+  .gender-label { font-size:13px; font-weight:700; width:80px; }
+  .gender-bar-bg { flex:1; height:28px; background:#F0F4FF; border-radius:8px; overflow:hidden; }
+  .gender-bar-fill { height:100%; border-radius:8px; display:flex; align-items:center; padding-left:10px; font-size:12px; font-weight:800; color:white; }
+  .gender-pct { font-size:13px; font-weight:800; width:42px; text-align:right; }
+  .age-bars { display:flex; flex-direction:column; gap:8px; }
+  .age-row { display:flex; align-items:center; gap:10px; }
+  .age-label { font-size:12px; font-weight:600; color:var(--gray-text); width:48px; flex-shrink:0; }
+  .age-bg { flex:1; height:22px; background:#F0F4FF; border-radius:6px; overflow:hidden; }
+  .age-fill { height:100%; border-radius:6px; background:var(--blue-deep); display:flex; align-items:center; padding-left:8px; font-size:11px; font-weight:700; color:white; }
+  .age-pct { font-size:12px; font-weight:700; color:var(--gray-muted); width:38px; text-align:right; }
+
+  .posts-list { display:flex; flex-direction:column; gap:10px; }
+  .post-item { display:flex; align-items:center; gap:14px; padding:14px 16px; background:var(--gray-bg); border-radius:12px; border-left:4px solid var(--border); }
+  .post-item.r1 { border-color:#F59E0B; background:#FFFBEB; }
+  .post-item.r2 { border-color:#94A3B8; background:#F8FAFC; }
+  .post-item.r3 { border-color:#CD7F32; background:#FDF8F0; }
+  .post-rank { font-size:18px; font-weight:900; color:var(--gray-muted); width:26px; flex-shrink:0; text-align:center; }
+  .post-rank.gold { color:#F59E0B; } .post-rank.silver { color:#94A3B8; } .post-rank.bronze { color:#CD7F32; }
+  .post-info { flex:1; min-width:0; }
+  .post-meta { font-size:12px; color:var(--gray-muted); margin-bottom:4px; display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+  .badge-type { border-radius:6px; padding:2px 8px; font-size:10px; font-weight:700; }
+  .badge-type.reel { background:#EDE9FE; color:#6D28D9; }
+  .badge-type.car  { background:var(--blue-pale); color:var(--blue-deep); }
+  .post-note { font-size:10px; border-radius:6px; padding:2px 8px; display:inline-block; margin-top:4px; font-weight:700; }
+  .post-stats { display:flex; gap:14px; flex-shrink:0; }
+  .stat .v { font-size:15px; font-weight:800; color:var(--black); display:block; }
+  .stat .l { font-size:9px; color:var(--gray-muted); text-transform:uppercase; letter-spacing:.4px; }
+
+  .time-slot { display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius:10px; margin-bottom:8px; border-left:3px solid; }
+  .ts-label { font-weight:700; font-size:13px; color:var(--black); }
+  .ts-score { font-size:11px; color:var(--gray-muted); margin-top:1px; }
+
+  .stories-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:10px; margin-bottom:20px; }
+  .story-day { background:var(--gray-bg); border-radius:14px; padding:14px 10px; text-align:center; border-top:3px solid var(--border); }
+  .story-day.best { border-color:var(--blue-deep); background:var(--blue-pale); }
+  .story-day .day-name { font-size:11px; font-weight:800; color:var(--gray-muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:.5px; }
+  .story-day.best .day-name { color:var(--blue-deep); }
+  .story-slot { background:white; border-radius:8px; padding:7px 6px; margin-bottom:6px; border:1px solid var(--border); }
+  .story-slot .time { font-weight:800; color:var(--black); font-size:13px; }
+  .story-slot .hint { font-size:9px; color:var(--gray-muted); margin-top:2px; line-height:1.35; }
+  .story-slot.slot-open  { border-color:#10B981; background:#F0FDF4; }
+  .story-slot.slot-open .time  { color:#059669; }
+  .story-slot.slot-lunch { border-color:#F59E0B; background:#FFFBEB; }
+  .story-slot.slot-lunch .time { color:#B45309; }
+  .story-slot.slot-eve   { border-color:var(--blue-mid); background:var(--blue-pale); }
+  .story-slot.slot-eve .time   { color:var(--blue-deep); }
+  .story-day-score { font-size:9px; color:var(--gray-muted); margin-top:6px; }
+  .story-legend { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:18px; }
+  .story-legend-item { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--gray-muted); }
+  .legend-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+
+  .ideas-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .idea-card { background:var(--gray-bg); border-radius:16px; padding:20px; border:1px solid var(--border); }
+  .idea-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:12px; }
+  .idea-emoji { font-size:28px; flex-shrink:0; line-height:1; }
+  .idea-meta { flex:1; }
+  .idea-title  { font-size:15px; font-weight:800; color:var(--black); }
+  .idea-format { font-size:11px; color:var(--gray-muted); margin-top:2px; }
+  .idea-why { font-size:12px; color:var(--gray-muted); line-height:1.6; border-left:3px solid var(--blue-mid); padding-left:10px; margin-bottom:14px; }
+  .idea-text-wrap { background:white; border:1px solid var(--border); border-radius:12px; padding:16px; font-size:12.5px; line-height:1.8; color:var(--black); white-space:pre-line; font-family:inherit; margin-bottom:12px; max-height:260px; overflow-y:auto; }
+  .btn-copy-card { width:100%; padding:9px 14px; border-radius:8px; border:1px solid var(--blue-deep); background:white; font-size:12px; font-weight:700; cursor:pointer; color:var(--blue-deep); transition:all .15s; }
+  .btn-copy-card:hover { background:var(--blue-deep); color:white; }
+  .btn-copy-card.copied { background:#F0FDF4; border-color:#10B981; color:#059669; }
+  .expand-btn { width:100%; padding:7px; border-radius:8px; border:1px solid var(--border); background:white; font-size:11px; font-weight:700; cursor:pointer; color:var(--gray-muted); margin-bottom:10px; }
+  .expand-btn:hover { border-color:var(--blue-mid); color:var(--blue-deep); }
+  .idea-full-hidden { display:none; }
+  .idea-full-hidden.open { display:block; }
+
+  .footer { text-align:center; font-size:11px; color:var(--gray-muted); padding:16px 0 8px; letter-spacing:.3px; }
+
+  @media (max-width:900px) {
+    .kpi-grid { grid-template-columns:repeat(2,1fr); }
+    .two-col  { grid-template-columns:1fr; }
+    .stories-grid { grid-template-columns:repeat(3,1fr); }
+    .ideas-grid { grid-template-columns:1fr; }
+    .demo-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="dashboard">
+
+  <div class="header">
+    <div class="header-deco"></div>
+    <div class="header-deco2"></div>
+    <div class="brand-name">AICITY</div>
+    <div class="brand-tag">The best of Technology in your city!</div>
+    <div class="header-divider"></div>
+    <div class="header-info-row">
+      <div class="header-info-item">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+          <rect x="2" y="2" width="20" height="20" rx="6" stroke="rgba(255,255,255,0.7)" stroke-width="1.8"/>
+          <circle cx="12" cy="12" r="4" stroke="rgba(255,255,255,0.7)" stroke-width="1.8"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="rgba(255,255,255,0.7)"/>
+        </svg>
+        @aicitybr
+      </div>
+      <div class="header-info-item"><span class="dot"></span></div>
+      <div class="header-info-item">📍 São Paulo</div>
+      <div class="header-info-item"><span class="dot"></span></div>
+      <div class="header-info-item">🏪 Loja física ao lado metrô Ana Rosa</div>
+    </div>
+    <div class="header-report">Relatório de Junho 2026</div>
+    <div class="header-badges">
+      <div class="hbadge"><span class="n">2,71M</span><span class="l">Alcance Total</span></div>
+      <div class="hbadge"><span class="n">+0,5%</span><span class="l">vs Maio (média/dia)</span></div>
+      <div class="hbadge"><span class="n">7</span><span class="l">Publicações</span></div>
+      <div class="hbadge"><span class="n">284</span><span class="l">Interações</span></div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon">👁️</div>
+      <div class="kpi-value">2.713.547</div>
+      <div class="kpi-label">Alcance Total — Junho 2026</div>
+      <div class="kpi-delta delta-up">↑ +0,5% vs maio (média/dia)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">🎬</div>
+      <div class="kpi-value">15.968</div>
+      <div class="kpi-label">Visualizações em Reels</div>
+      <div class="kpi-delta delta-n">4 reels publicados</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">❤️</div>
+      <div class="kpi-value">284</div>
+      <div class="kpi-label">Interações Totais</div>
+      <div class="kpi-delta delta-n">Curtidas · Comentários · Salvos</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">📈</div>
+      <div class="kpi-value">90.451</div>
+      <div class="kpi-label">Média Diária de Alcance</div>
+      <div class="kpi-delta delta-up">↑ vs 90.018/dia em maio</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📉 Alcance Diário <span class="pill">JUNHO 2026</span></div>
+    <div class="chart-wrap">
+      <canvas id="reachChart"></canvas>
+    </div>
+    <p style="font-size:11px;color:var(--gray-muted);margin-top:10px;">Linha tracejada = média de referência de Maio (90.018/dia) · Pico máximo: 01/06 com 117.575 de alcance.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">👥 Perfil do Público <span class="pill">GÊNERO & IDADE</span></div>
+    <div class="demo-grid">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--gray-text);margin-bottom:14px;">Gênero dos seguidores</div>
+        <div class="gender-wrap">
+          <div class="gender-bar-row">
+            <div class="gender-label" style="color:#EC4899;">♀ Feminino</div>
+            <div class="gender-bar-bg"><div class="gender-bar-fill" style="width:51.8%;background:linear-gradient(90deg,#EC4899,#F472B6);">51,8%</div></div>
+            <div class="gender-pct" style="color:#EC4899;">51,8%</div>
+          </div>
+          <div class="gender-bar-row">
+            <div class="gender-label" style="color:var(--blue-deep);">♂ Masculino</div>
+            <div class="gender-bar-bg"><div class="gender-bar-fill" style="width:48.2%;background:linear-gradient(90deg,var(--blue-deep),var(--blue-mid));">48,2%</div></div>
+            <div class="gender-pct" style="color:var(--blue-deep);">48,2%</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--gray-muted);margin-top:14px;line-height:1.6;background:var(--gray-bg);border-radius:10px;padding:10px 12px;">
+          💡 Audiência equilibrada com leve maioria feminina.
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--gray-text);margin-bottom:14px;">Faixa etária dos seguidores</div>
+        <div class="age-bars">
+          <div class="age-row"><div class="age-label">25–34</div><div class="age-bg"><div class="age-fill" style="width:39.9%;">39,9%</div></div><div class="age-pct">39,9%</div></div>
+          <div class="age-row"><div class="age-label">18–24</div><div class="age-bg"><div class="age-fill" style="width:24.9%;background:var(--blue-mid);">24,9%</div></div><div class="age-pct">24,9%</div></div>
+          <div class="age-row"><div class="age-label">35–44</div><div class="age-bg"><div class="age-fill" style="width:20.0%;background:var(--blue-light);">20,0%</div></div><div class="age-pct">20,0%</div></div>
+          <div class="age-row"><div class="age-label">45–54</div><div class="age-bg"><div class="age-fill" style="width:12.8%;background:#BDD0F8;color:var(--blue-deep);">12,8%</div></div><div class="age-pct">12,8%</div></div>
+          <div class="age-row"><div class="age-label">55–64</div><div class="age-bg"><div class="age-fill" style="width:1.3%;background:#BDD0F8;min-width:28px;color:var(--blue-deep);">1,3%</div></div><div class="age-pct">1,3%</div></div>
+          <div class="age-row"><div class="age-label">65+</div><div class="age-bg"><div class="age-fill" style="width:0.5%;background:#BDD0F8;min-width:24px;color:var(--blue-deep);">0,5%</div></div><div class="age-pct">0,5%</div></div>
+        </div>
+        <div style="font-size:11px;color:var(--gray-muted);margin-top:14px;line-height:1.6;background:var(--gray-bg);border-radius:10px;padding:10px 12px;">
+          💡 <strong style="color:var(--gray-text);">64,8% do público tem entre 18 e 34 anos.</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="section-title">🏆 Top 5 Posts <span class="pill">ALCANCE & ENGAJAMENTO</span></div>
+      <div class="posts-list">
+        <div class="post-item r1">
+          <div class="post-rank gold">#1</div>
+          <div class="post-info">
+            <div class="post-meta"><span>23/06</span><span class="badge-type car">Feed Post</span></div>
+            <div class="post-note" style="background:#FEF3C7;color:#92400E;">🏆 Maior engajamento · 2,19%</div>
+          </div>
+          <div class="post-stats">
+            <div class="stat"><span class="v">2.784</span><span class="l">Alcance</span></div>
+            <div class="stat"><span class="v">61</span><span class="l">Interact.</span></div>
+            <div class="stat"><span class="v">21</span><span class="l">Shares</span></div>
+          </div>
+        </div>
+        <div class="post-item r2">
+          <div class="post-rank silver">#2</div>
+          <div class="post-info">
+            <div class="post-meta"><span>13/06</span><span class="badge-type reel">Reel</span></div>
+            <div class="post-note" style="background:var(--blue-pale);color:var(--blue-deep);">🎯 Maior reel views · 5.496</div>
+          </div>
+          <div class="post-stats">
+            <div class="stat"><span class="v">5.496</span><span class="l">Views</span></div>
+            <div class="stat"><span class="v">58</span><span class="l">Interact.</span></div>
+            <div class="stat"><span class="v">8</span><span class="l">Shares</span></div>
+          </div>
+        </div>
+        <div class="post-item r3">
+          <div class="post-rank bronze">#3</div>
+          <div class="post-info">
+            <div class="post-meta"><span>22/06</span><span class="badge-type reel">Reel</span></div>
+            <div class="post-note" style="background:#FDF8F0;color:#92400E;">🔥 13 shares · maior engaj. em reels</div>
+          </div>
+          <div class="post-stats">
+            <div class="stat"><span class="v">2.590</span><span class="l">Views</span></div>
+            <div class="stat"><span class="v">58</span><span class="l">Interact.</span></div>
+            <div class="stat"><span class="v">13</span><span class="l">Shares</span></div>
+          </div>
+        </div>
+        <div class="post-item">
+          <div class="post-rank">#4</div>
+          <div class="post-info">
+            <div class="post-meta"><span>03/06</span><span class="badge-type car">Feed Post</span></div>
+            <div class="post-note" style="background:#F0FDF4;color:#15803D;">💾 15 salvos · 1,74% engajamento</div>
+          </div>
+          <div class="post-stats">
+            <div class="stat"><span class="v">2.757</span><span class="l">Alcance</span></div>
+            <div class="stat"><span class="v">48</span><span class="l">Interact.</span></div>
+            <div class="stat"><span class="v">15</span><span class="l">Salvos</span></div>
+          </div>
+        </div>
+        <div class="post-item">
+          <div class="post-rank">#5</div>
+          <div class="post-info">
+            <div class="post-meta"><span>08/06</span><span class="badge-type reel">Reel + Post</span></div>
+            <div class="post-note" style="background:var(--blue-pale);color:var(--blue-deep);">📹 Reel 5.492 views + Post 2.193 alcance</div>
+          </div>
+          <div class="post-stats">
+            <div class="stat"><span class="v">5.492</span><span class="l">Reel Views</span></div>
+            <div class="stat"><span class="v">48</span><span class="l">Interact.</span></div>
+            <div class="stat"><span class="v">8</span><span class="l">Shares</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="section-title">⏰ Melhores Horários — Posts <span class="pill">REELS & FEED</span></div>
+      <div style="font-size:12px;color:var(--gray-muted);margin-bottom:14px;font-weight:600;">Janelas de maior audiência ativa:</div>
+      <div class="time-slot" style="background:#FFFBEB;border-color:#F59E0B;"><span style="font-size:20px;">🥇</span><div><div class="ts-label">Sexta-feira · 10h às 12h</div><div class="ts-score">Score máximo: 6.734 — melhor janela da semana</div></div></div>
+      <div class="time-slot" style="background:var(--blue-pale);border-color:var(--blue-deep);"><span style="font-size:20px;">🥈</span><div><div class="ts-label">Quarta-feira · 10h às 12h</div><div class="ts-score">Score: 6.506</div></div></div>
+      <div class="time-slot" style="background:#EFF6FF;border-color:var(--blue-mid);"><span style="font-size:20px;">🥉</span><div><div class="ts-label">Quinta-feira · 10h às 12h</div><div class="ts-score">Score: 6.275</div></div></div>
+      <div class="time-slot" style="background:#F0FDF4;border-color:#10B981;"><span style="font-size:20px;">4️⃣</span><div><div class="ts-label">Segunda-feira · 10h às 12h</div><div class="ts-score">Score: 5.528</div></div></div>
+      <div class="time-slot" style="background:#F5F3FF;border-color:#7C3AED;"><span style="font-size:20px;">5️⃣</span><div><div class="ts-label">Terça-feira · 18h às 19h</div><div class="ts-score">Score: 4.788 — melhor janela noturna</div></div></div>
+      <div style="font-size:12px;color:var(--gray-muted);background:var(--gray-bg);border-radius:10px;padding:12px 14px;line-height:1.65;margin-top:12px;border:1px solid var(--border);">
+        💡 <strong style="color:var(--gray-text);">Insight:</strong> Pico de audiência é <strong style="color:var(--black);">10h–12h nos dias úteis</strong>. Fim de semana tem até <strong style="color:#DC2626;">62% menos</strong> alcance — priorize Qua, Qui e Sex.
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📸 Stories — Melhores Horários por Dia <span class="pill">SEG → DOM</span></div>
+    <div class="story-legend">
+      <div class="story-legend-item"><div class="legend-dot" style="background:#10B981;"></div>Abertura da loja (10h)</div>
+      <div class="story-legend-item"><div class="legend-dot" style="background:#F59E0B;"></div>Pico do almoço</div>
+      <div class="story-legend-item"><div class="legend-dot" style="background:var(--blue-mid);"></div>Período noturno</div>
+      <div class="story-legend-item"><div class="legend-dot" style="background:var(--blue-deep);"></div>Dia de alto potencial</div>
+    </div>
+    <div class="stories-grid">
+      <div class="story-day">
+        <div class="day-name">Seg</div>
+        <div class="story-slot slot-open"><div class="time">10h00</div><div class="hint">Abertura · bom dia + produto do dia</div></div>
+        <div class="story-slot slot-lunch"><div class="time">13h00</div><div class="hint">Promoção rápida ou enquete</div></div>
+        <div class="story-slot slot-eve"><div class="time">18h00</div><div class="hint">CTA · saída do trabalho</div></div>
+        <div class="story-day-score">Score 10h: 5.528</div>
+      </div>
+      <div class="story-day">
+        <div class="day-name">Ter</div>
+        <div class="story-slot slot-open"><div class="time">10h00</div><div class="hint">Abertura · destaque de produto</div></div>
+        <div class="story-slot slot-lunch"><div class="time">13h00</div><div class="hint">Curiosidade ou dica rápida</div></div>
+        <div class="story-slot slot-eve"><div class="time">18h00</div><div class="hint">⭐ Melhor noite da semana</div></div>
+        <div class="story-day-score">Score 10h: 4.942</div>
+      </div>
+      <div class="story-day best">
+        <div class="day-name">Qua ⚡</div>
+        <div class="story-slot slot-open"><div class="time">10h00</div><div class="hint">Produto principal do dia</div></div>
+        <div class="story-slot slot-lunch"><div class="time">12h00</div><div class="hint">Score 5.774 · use promo aqui</div></div>
+        <div class="story-slot slot-eve"><div class="time">18h00</div><div class="hint">Enquete / perguntas</div></div>
+        <div class="story-day-score">Score 10h: 6.506</div>
+      </div>
+      <div class="story-day best">
+        <div class="day-name">Qui ⚡</div>
+        <div class="story-slot slot-open"><div class="time">10h00</div><div class="hint">Abertura · produto destaque</div></div>
+        <div class="story-slot slot-lunch"><div class="time">12h00</div><div class="hint">Score 5.730 · promoção</div></div>
+        <div class="story-slot slot-eve"><div class="time">18h00</div><div class="hint">⭐ Score 5.078 · melhor noite</div></div>
+        <div class="story-day-score">Score 10h: 6.275</div>
+      </div>
+      <div class="story-day best">
+        <div class="day-name">Sex 🏆</div>
+        <div class="story-slot slot-open"><div class="time">10h00</div><div class="hint">🏆 Score 6.734 · melhor hora da semana</div></div>
+        <div class="story-slot slot-lunch"><div class="time">12h00</div><div class="hint">Score 5.909 · conversão</div></div>
+        <div class="story-slot slot-eve"><div class="time">17h00</div><div class="hint">Pré-fim de semana · score 4.697</div></div>
+        <div class="story-day-score">Score 10h: 6.734 ← pico máx.</div>
+      </div>
+      <div class="story-day">
+        <div class="day-name">Sáb</div>
+        <div class="story-slot slot-open"><div class="time">10h00</div><div class="hint">Boas-vindas ao fim de semana</div></div>
+        <div class="story-slot slot-lunch"><div class="time">13h00</div><div class="hint">Promoção de fim de semana</div></div>
+        <div class="story-slot slot-eve"><div class="time">18h00</div><div class="hint">Engajamento leve</div></div>
+        <div class="story-day-score">Score 10h: 3.409</div>
+      </div>
+      <div class="story-day">
+        <div class="day-name">Dom</div>
+        <div class="story-slot slot-open"><div class="time">10h00</div><div class="hint">Se abrir · story de produto</div></div>
+        <div class="story-slot slot-lunch"><div class="time">12h00</div><div class="hint">Melhor hora do domingo</div></div>
+        <div class="story-slot slot-eve"><div class="time">19h00</div><div class="hint">Prévia da semana que vem</div></div>
+        <div class="story-day-score">Score 10h: 2.582</div>
+      </div>
+    </div>
+    <div style="background:var(--gray-bg);border:1px solid var(--border);border-radius:14px;padding:16px 20px;font-size:12px;line-height:1.75;color:var(--gray-text);">
+      💡 <strong style="color:var(--black);">Estratégia de stories:</strong> 3 stories por dia nos dias úteis <strong>(10h · 12h-13h · 18h)</strong>, priorizando <strong style="color:var(--blue-deep);">Qua, Qui e Sex</strong>.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">✍️ Roteiros de Conteúdo <span class="pill">5 FORMATOS PARA JULHO</span></div>
+    <p style="font-size:13px;color:var(--gray-muted);margin-bottom:20px;line-height:1.65;">Baseados nos posts de maior performance de junho.</p>
+    <div class="ideas-grid" id="ideasGrid"></div>
+  </div>
+
+  <div class="footer">AICITY · Relatório Instagram · @aicitybr · Período: 01/06/2026 – 30/06/2026 · Fonte: Metricool / Instagram Business API</div>
+</div>
+
+<script>
+const ideas = [
+  {
+    emoji:'✨', title:'Post Educacional com Alto Compartilhamento', format:'Carrossel 5–7 slides · 2x por mês',
+    why:'Inspirado no post de 23/06 — maior engajamento de junho (2,19%) e 21 compartilhamentos.',
+    text:`SLIDE 1 — CAPA:
+"[Número] coisas que você não sabia que o [iPhone/MacBook] faz 🤯"
+
+SLIDES 2–6 — REVELAÇÕES (1 por slide):
+• "Segure o botão de volume para fotografar sem tirar o celular do bolso 📸"
+• "Arraste o espaço de texto para mover o cursor com precisão ✍️"
+• "Dois dedos no teclado do iPhone transformam ele em trackpad 🖱️"
+
+SLIDE FINAL — CTA:
+"Compartilha com alguém que não sabia!
+Na AICITY você encontra todos os modelos Apple:
+✅ Aceitamos seu usado na troca  ✅ Parcelamos em até 18x
+📍 Loja física ao lado metrô Ana Rosa  🔗 Link na bio"
+
+――――――――――――――――――――――
+CAPTION:
+Qual desses você já conhecia? Comenta o número! 👇
+📍 São Paulo · Metrô Ana Rosa · 🔗 Link na bio
+#apple #iphone #dicasdecelular #techbrasil #saopaulo #aicity`
+  },
+  {
+    emoji:'🎬', title:'Reel de Recurso Escondido', format:'Reel 20–30 seg · sem voz · 2x por semana',
+    why:'Reels de 13/06 e 08/06 lideraram em views (5.496 e 5.492). Hook nos 3s iniciais é decisivo.',
+    text:`[0–3s — HOOK]:
+Texto na tela: "Esse recurso do iPhone que 90% não conhece 👀"
+Fundo: tela do iPhone em close, sem cara na câmera
+
+[3–12s — DEMONSTRAÇÃO]:
+Mostre o recurso em ação — câmera lenta ou zoom
+Sem fala · música trending no fundo
+
+[12–20s — RESULTADO]:
+Texto: "Isso [economiza tempo / evita frustração / impressiona qualquer um]"
+Fonte grande, centralizada, com ícone
+
+[20–28s — CTA]:
+"Quer um iPhone seminovo com garantia?
+AICITY · ao lado metrô Ana Rosa · 🔗 Link na bio"
+
+――――――――――――――――――――――
+CAPTION:
+Salva esse vídeo antes de precisar 💾
+Na AICITY parcelamos em até 18x e aceitamos seu usado na troca.
+📍 São Paulo · Metrô Ana Rosa · 🔗 Link na bio
+#iphone #apple #dicastech #saopaulo #aicity`
+  },
+  {
+    emoji:'❄️', title:'Reel de Inverno: Tecnologia no Frio', format:'Reel 20–25 seg · temático julho',
+    why:'Julho é inverno em SP. Conteúdo sazonal conecta produto com momento da audiência.',
+    text:`[0–3s — HOOK SAZONAL]:
+Cena: xícara de café fumegando ou céu cinza de SP
+Texto na tela: "Frio em São Paulo = maratona de série? 📺"
+
+[3–15s — GANCHO + PRODUTO]:
+"Seu iPhone com [bateria mais duradoura / tela maior] pra aguentar o dia inteiro no conforto"
+Mostre o produto em cena aconchegante
+
+[15–22s — DIFERENCIAL AICITY]:
+"Na AICITY você não precisa esperar chegar um produto novo.
+Temos o [modelo] com garantia, aceite na troca e 18x ✅"
+
+[22–25s — CTA]:
+"Vem na loja ou chama no link da bio 📩"
+
+――――――――――――――――――――――
+CAPTION:
+Nada melhor que um [iPhone/MacBook] bom no inverno de SP 🥶
+📍 Metrô Ana Rosa · 🔗 Link na bio
+#inverno #saopaulo #iphone #apple #julho #aicity`
+  },
+  {
+    emoji:'🔄', title:'Carrossel: Guia de Trade-In Passo a Passo', format:'Carrossel 6 slides · 1x por mês',
+    why:'Post de 03/06 gerou 15 salvos — melhor taxa de salvamento do mês. Trade-in remove a principal objeção de compra.',
+    text:`SLIDE 1 — CAPA:
+"Como trocar seu celular na AICITY sem complicação 🔄"
+
+SLIDE 2:
+"📱 Passo 1: Traga seu aparelho atual
+Qualquer modelo, qualquer estado — avaliamos na hora"
+
+SLIDE 3:
+"💰 Passo 2: Receba o valor de troca
+O valor é abatido diretamente no produto novo"
+
+SLIDE 4:
+"📦 Passo 3: Escolha seu novo Apple
+iPhones, MacBooks, iPads — todos com garantia"
+
+SLIDE 5:
+"💳 Passo 4: Parcele a diferença
+O restante em até 18x no cartão. Sem burocracia."
+
+SLIDE 6 — CTA:
+"Não deixa o aparelho parado na gaveta 📦
+AICITY · Metrô Ana Rosa · 🔗 Link na bio"
+
+――――――――――――――――――――――
+CAPTION:
+Salva esse post! Da próxima vez que você quiser trocar de Apple, já sabe onde ir 📌
+📍 Metrô Ana Rosa, São Paulo · 📩 Link na bio
+#tradein #apple #iphone #saopaulo #aicity #seminovo`
+  },
+  {
+    emoji:'⭐', title:'Reel de Prova Social: Clientes Reais', format:'Reel 20–30 seg · depoimento',
+    why:'Junho mostrou que compartilhamentos (21 shares em 23/06) aumentam com identificação humana. Depoimentos convertem indecisos.',
+    text:`[0–3s — HOOK]:
+Texto: "O que o nosso cliente achou depois de comprar na AICITY 👇"
+
+[3–18s — DEPOIMENTO]:
+Cliente fala (ou texto na tela):
+"Vim com meu iPhone [modelo antigo], saí com o [modelo novo] —
+parcelei a diferença e não gastei quase nada no bolso 🙌"
+
+[18–25s — REFORÇO DE MARCA]:
+"Aqui na AICITY é assim: você traz o seu, leva o que quer.
+Aceitamos usados, parcelamos em até 18x. Garantia inclusa ✅"
+
+[25–30s — CTA]:
+"Quer ser o próximo?
+Loja física ao lado metrô Ana Rosa · Link na bio 🔗"
+
+――――――――――――――――――――――
+CAPTION:
+Resultado real, cliente feliz 💙
+📍 Metrô Ana Rosa, São Paulo · 📩 Link na bio
+#aicity #apple #iphone #seminovo #saopaulo #provasocial`
+  }
+];
+
+function renderCards() {
+  const grid = document.getElementById('ideasGrid');
+  grid.innerHTML = ideas.map((idea, i) => `
+    <div class="idea-card">
+      <div class="idea-head">
+        <div class="idea-emoji">${idea.emoji}</div>
+        <div class="idea-meta">
+          <div class="idea-title">${idea.title}</div>
+          <div class="idea-format">${idea.format}</div>
+        </div>
+      </div>
+      <div class="idea-why">${idea.why}</div>
+      <button class="expand-btn" id="expbtn-${i}" onclick="toggleExpand(${i})">▾ Ver roteiro completo</button>
+      <div class="idea-full-hidden" id="full-${i}">
+        <div class="idea-text-wrap">${idea.text}</div>
+      </div>
+      <button class="btn-copy-card" id="copybtn-${i}" onclick="copyIdea(${i})">📋 Copiar roteiro completo</button>
+    </div>
+  `).join('');
+}
+
+function toggleExpand(i) {
+  const el = document.getElementById('full-' + i);
+  const btn = document.getElementById('expbtn-' + i);
+  const open = el.classList.toggle('open');
+  btn.textContent = open ? '▴ Fechar roteiro' : '▾ Ver roteiro completo';
+}
+
+function copyIdea(i) {
+  navigator.clipboard.writeText(ideas[i].text).then(() => {
+    const btn = document.getElementById('copybtn-' + i);
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+renderCards();
+
+function initChart() {
+  const canvas = document.getElementById('reachChart');
+  if (!canvas) return;
+  const data = [117575,98002,87013,89135,91131,79234,108441,80463,79024,75093,75381,73140,103813,101130,88420,97183,105282,86432,87398,91185,99566,86033,102656,82065,78805,73901,77850,95168,108074,94954];
+  const refVal = 90018;
+  const labels = Array.from({length:30}, (_,i) => String(i+1).padStart(2,'0') + '/06');
+  const DPR = window.devicePixelRatio || 1;
+  const W = canvas.parentElement.clientWidth || 800;
+  const H = 260;
+  canvas.width = W * DPR; canvas.height = H * DPR;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(DPR, DPR);
+  const pad = {top:36, right:24, bottom:38, left:62};
+  const pw = W - pad.left - pad.right;
+  const ph = H - pad.top - pad.bottom;
+  const minV = 65000, maxV = 125000, rng = maxV - minV;
+  const toX = i => pad.left + (i / (data.length - 1)) * pw;
+  const toY = v => pad.top + ph - ((v - minV) / rng) * ph;
+  const yTicks = [70000,80000,90000,100000,110000,120000];
+  ctx.font = '10px -apple-system,sans-serif'; ctx.textAlign = 'right';
+  yTicks.forEach(v => {
+    const y = toY(v);
+    ctx.strokeStyle = '#EEF0F8'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+    ctx.fillStyle = '#9a9aaa'; ctx.fillText((v/1000).toFixed(0) + 'k', pad.left - 6, y + 3.5);
+  });
+  ctx.fillStyle = '#9a9aaa'; ctx.textAlign = 'center';
+  for (let i = 0; i < data.length; i++) {
+    if (i % 5 === 0 || i === 29) ctx.fillText(labels[i], toX(i), H - pad.bottom + 16);
+  }
+  ctx.save(); ctx.strokeStyle = 'rgba(245,158,11,0.70)'; ctx.lineWidth = 1.8;
+  ctx.setLineDash([7,5]);
+  ctx.beginPath(); ctx.moveTo(pad.left, toY(refVal)); ctx.lineTo(W - pad.right, toY(refVal)); ctx.stroke();
+  ctx.setLineDash([]); ctx.restore();
+  ctx.save(); ctx.fillStyle = 'rgba(18,34,190,0.07)';
+  ctx.beginPath(); ctx.moveTo(toX(0), toY(data[0]));
+  for (let i = 1; i < data.length; i++) { const cpx = (toX(i-1)+toX(i))/2; ctx.bezierCurveTo(cpx,toY(data[i-1]),cpx,toY(data[i]),toX(i),toY(data[i])); }
+  ctx.lineTo(toX(data.length-1), toY(minV)); ctx.lineTo(toX(0), toY(minV)); ctx.closePath(); ctx.fill(); ctx.restore();
+  ctx.save(); ctx.strokeStyle = '#1222BE'; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(toX(0), toY(data[0]));
+  for (let i = 1; i < data.length; i++) { const cpx = (toX(i-1)+toX(i))/2; ctx.bezierCurveTo(cpx,toY(data[i-1]),cpx,toY(data[i]),toX(i),toY(data[i])); }
+  ctx.stroke(); ctx.restore();
+  ctx.fillStyle = '#1222BE';
+  data.forEach((v,i) => { ctx.beginPath(); ctx.arc(toX(i),toY(v),3,0,Math.PI*2); ctx.fill(); });
+  const lx = pad.left; ctx.font = '11px -apple-system,sans-serif'; ctx.textAlign = 'left';
+  ctx.strokeStyle = '#1222BE'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(lx,16); ctx.lineTo(lx+22,16); ctx.stroke();
+  ctx.fillStyle = '#3d3d4a'; ctx.fillText('Alcance diário — Junho 2026', lx+26, 20);
+  ctx.strokeStyle = 'rgba(245,158,11,0.70)'; ctx.lineWidth = 1.8; ctx.setLineDash([7,5]);
+  ctx.beginPath(); ctx.moveTo(lx+220,16); ctx.lineTo(lx+242,16); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = '#9a9aaa'; ctx.fillText('Média de Maio (90.018/dia)', lx+246, 20);
+  canvas.onmousemove = function(e) {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const idx = Math.round((mx - pad.left) / pw * (data.length - 1));
+    if (idx < 0 || idx >= data.length) return;
+    initChart();
+    const cx = toX(idx), cy = toY(data[idx]);
+    ctx.fillStyle = 'white'; ctx.beginPath(); ctx.arc(cx,cy,6,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#1222BE'; ctx.beginPath(); ctx.arc(cx,cy,4,0,Math.PI*2); ctx.fill();
+    const txt = labels[idx] + ': ' + data[idx].toLocaleString('pt-BR');
+    ctx.font = 'bold 12px -apple-system,sans-serif';
+    const tw = ctx.measureText(txt).width + 20;
+    let tx = cx - tw/2; tx = Math.max(pad.left, Math.min(W - pad.right - tw, tx));
+    const ty = cy - 38;
+    ctx.fillStyle = '#1222BE'; ctx.beginPath();
+    const r = 6;
+    ctx.moveTo(tx+r,ty); ctx.lineTo(tx+tw-r,ty); ctx.quadraticCurveTo(tx+tw,ty,tx+tw,ty+r);
+    ctx.lineTo(tx+tw,ty+22-r); ctx.quadraticCurveTo(tx+tw,ty+22,tx+tw-r,ty+22);
+    ctx.lineTo(tx+r,ty+22); ctx.quadraticCurveTo(tx,ty+22,tx,ty+22-r);
+    ctx.lineTo(tx,ty+r); ctx.quadraticCurveTo(tx,ty,tx+r,ty); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = 'white'; ctx.textAlign = 'left'; ctx.fillText(txt, tx+10, ty+15);
+  };
+  canvas.onmouseleave = initChart;
+}
+requestAnimationFrame(function() { requestAnimationFrame(initChart); });
+</script>
+</body>
+</html>
